@@ -6,10 +6,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @EnableBatchProcessing
 @SpringBootApplication
-public class CopyBaseFetcherApplication {
+public class FetcherApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(CopyBaseFetcherApplication.class, args);
+        SpringApplication.run(FetcherApplication.class, args);
     }
 
 }

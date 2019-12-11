@@ -1,0 +1,37 @@
+version: '2.1'
+
+services:
+  pg-source:
+    image: postgres
+    restart: always
+    #    DO NOT USE VOLUMES ON WINDOWS  #PROBLEMS !!!
+    #    volumes:
+    #      - ./postgres-source:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: password
+    ports:
+      - '5533:5432'
+    networks:
+      - net
+  pg-target:
+    image: postgres
+    restart: always
+    #    DO NOT USE VOLUMES ON WINDOWS  #PROBLEMS !!!
+    #    volumes:
+    #      - ./postgres-target:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: password
+    ports:
+      - '5544:5432'
+    networks:
+      - net
+  rabbit:
+    image: "rabbitmq:3.8.2-rc.1-management"
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - net
+networks:
+  net:
