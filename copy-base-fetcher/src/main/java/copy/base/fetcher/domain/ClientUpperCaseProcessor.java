@@ -16,7 +16,7 @@ public class ClientUpperCaseProcessor implements ItemProcessor<Client, Client> {
         String email = client.getEmail().toUpperCase();
         String phone = client.getPhone();
 
-        log.info("Converting ("+client+")");
+//        log.info("Converting ("+client+")");
 
         return new Client(id, firstName, lastName, email, phone);
     }

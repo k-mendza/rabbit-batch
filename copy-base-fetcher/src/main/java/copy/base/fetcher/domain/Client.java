@@ -1,5 +1,6 @@
 package copy.base.fetcher.domain;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.*;
 
 import java.io.Serializable;
@@ -9,6 +10,7 @@ import java.io.Serializable;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonSerialize
 public class Client implements Serializable {
     private Long id;
     private String firstName;
