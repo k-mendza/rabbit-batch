@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 public class ClientMessageListener {
     private static final Logger log = LoggerFactory.getLogger(ClientMessageListener.class);
 
-    public void receiveMessage(String message) {
+    public void receiveMessage(Object message) {
         log.info("Received <" + message +">");
     }
 }

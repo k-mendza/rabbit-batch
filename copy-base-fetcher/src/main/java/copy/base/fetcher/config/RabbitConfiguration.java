@@ -16,7 +16,13 @@ import org.springframework.context.annotation.Configuration;
 public class RabbitConfiguration {
     public static final String MESSAGE_EXCHANGE = "clients-exchange";
     public static final String MESSAGE_QUEUE = "clients-queue";
-    public static final String MESSAGE_ROUTING_KEY = "clients.msg.#";
+    public static final String MESSAGE_ROUTING_KEY = "clients.msg";
+
+    private final ConnectionFactory connectionFactory;
+
+    public RabbitConfiguration(ConnectionFactory connectionFactory) {
+        this.connectionFactory = connectionFactory;
+    }
 
     @Bean
     Queue queue() {
@@ -34,12 +40,15 @@ public class RabbitConfiguration {
     }
 
     @Bean
-    RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
-        return new RabbitTemplate(connectionFactory);
+    RabbitTemplate rabbitTemplate() {
+        RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
+        rabbitTemplate.setExchange(MESSAGE_EXCHANGE);
+        rabbitTemplate.setRoutingKey(MESSAGE_ROUTING_KEY);
+        return rabbitTemplate;
     }
 
     @Bean
-    SimpleMessageListenerContainer container(ConnectionFactory connectionFactory, MessageListenerAdapter listenerAdapter) {
+    SimpleMessageListenerContainer container(MessageListenerAdapter listenerAdapter) {
         SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
         container.setQueueNames(MESSAGE_QUEUE);
