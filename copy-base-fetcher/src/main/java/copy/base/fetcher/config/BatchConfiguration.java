@@ -3,7 +3,6 @@ package copy.base.fetcher.config;
 import copy.base.fetcher.domain.Client;
 import copy.base.fetcher.domain.ClientRowMapper;
 import copy.base.fetcher.domain.ClientUpperCaseProcessor;
-import lombok.AllArgsConstructor;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -12,20 +11,18 @@ import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
-import org.springframework.batch.item.amqp.AmqpItemReader;
-import org.springframework.batch.item.amqp.builder.AmqpItemReaderBuilder;
+import org.springframework.batch.item.amqp.AmqpItemWriter;
+import org.springframework.batch.item.amqp.builder.AmqpItemWriterBuilder;
 import org.springframework.batch.item.database.JdbcCursorItemReader;
 import org.springframework.batch.item.database.builder.JdbcCursorItemReaderBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import javax.sql.DataSource;
-import java.util.ArrayList;
-import java.util.List;
 
 @Configuration
-@AllArgsConstructor
 public class BatchConfiguration {
     public static final int CHUNK_SIZE = 2048;
     public static final int CORE_POOL_SIZE = 4;
@@ -35,7 +32,17 @@ public class BatchConfiguration {
     private final ConnectionFactory rabbitConnectionFactory;
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
-    private final DataSource dataSource;
+    private DataSource dataSource;
+    private RabbitTemplate rabbitTemplate;
+
+    @Autowired
+    public BatchConfiguration(ConnectionFactory rabbitConnectionFactory, JobBuilderFactory jobBuilderFactory, StepBuilderFactory stepBuilderFactory, DataSource dataSource, RabbitTemplate rabbitTemplate) {
+        this.rabbitConnectionFactory = rabbitConnectionFactory;
+        this.jobBuilderFactory = jobBuilderFactory;
+        this.stepBuilderFactory = stepBuilderFactory;
+        this.dataSource = dataSource;
+        this.rabbitTemplate = rabbitTemplate;
+    }
 
     @Bean
     public Queue clientQueue() {
@@ -58,8 +65,10 @@ public class BatchConfiguration {
     }
 
     @Bean
-    public AmqpItemReader<Client> clientAmqpItemReader() {
-        return new AmqpItemReaderBuilder<Client>().build();
+    public AmqpItemWriter<Client> clientAmqpItemWriter() {
+        return new AmqpItemWriterBuilder<Client>()
+                .amqpTemplate(rabbitTemplate)
+                .build();
     }
 
     @Bean
@@ -87,7 +96,7 @@ public class BatchConfiguration {
                 .<Client, Client>chunk(CHUNK_SIZE)
                 .reader(cursorItemReader())
                 .processor(upperCaseProcessor())
-                .writer()
+                .writer(clientAmqpItemWriter())
                 .taskExecutor(taskExecutor)
                 .build();
     }

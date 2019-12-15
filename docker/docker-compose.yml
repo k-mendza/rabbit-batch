@@ -2,6 +2,7 @@ version: '2.1'
 
 services:
   pg-source:
+    container_name: pg-source
     image: postgres
     restart: always
     #    DO NOT USE VOLUMES ON WINDOWS  #PROBLEMS !!!
@@ -14,6 +15,7 @@ services:
     networks:
       - net
   pg-target:
+    container_name: pg-target
     image: postgres
     restart: always
     #    DO NOT USE VOLUMES ON WINDOWS  #PROBLEMS !!!
