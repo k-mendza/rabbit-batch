@@ -17,5 +17,6 @@ spring:
 
 # Multi thread properties
 fetcher:
+  spring-batch-chunk-size: 2048
   core-pool-size: 4
   max-core-pool-size: 8
