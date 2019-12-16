@@ -9,8 +9,10 @@ import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 @Configuration
 public class RabbitConfiguration {
@@ -40,10 +42,11 @@ public class RabbitConfiguration {
     }
 
     @Bean
-    RabbitTemplate rabbitTemplate() {
+    RabbitTemplate rabbitTemplate(@Qualifier("taskExecutor") ThreadPoolTaskExecutor taskExecutor) {
         RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
         rabbitTemplate.setExchange(MESSAGE_EXCHANGE);
         rabbitTemplate.setRoutingKey(MESSAGE_ROUTING_KEY);
+        rabbitTemplate.setTaskExecutor(taskExecutor);
         return rabbitTemplate;
     }
 
