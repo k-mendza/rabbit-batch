@@ -1,7 +1,6 @@
 package copy.base.fetcher.config;
 
 import copy.base.fetcher.domain.Client;
-import copy.base.fetcher.domain.ClientItemWriteListener;
 import copy.base.fetcher.domain.ClientRowMapper;
 import copy.base.fetcher.domain.ClientUpperCaseProcessor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -34,15 +33,13 @@ public class BatchConfiguration {
 
     private DataSource dataSource;
     private RabbitTemplate rabbitTemplate;
-    private ClientItemWriteListener clientItemWriteListener;
 
     @Autowired
-    public BatchConfiguration(JobBuilderFactory jobBuilderFactory, StepBuilderFactory stepBuilderFactory, DataSource dataSource, RabbitTemplate rabbitTemplate, ClientItemWriteListener clientItemWriteListener) {
+    public BatchConfiguration(JobBuilderFactory jobBuilderFactory, StepBuilderFactory stepBuilderFactory, DataSource dataSource, RabbitTemplate rabbitTemplate) {
         this.jobBuilderFactory = jobBuilderFactory;
         this.stepBuilderFactory = stepBuilderFactory;
         this.dataSource = dataSource;
         this.rabbitTemplate = rabbitTemplate;
-        this.clientItemWriteListener = clientItemWriteListener;
     }
 
     @Bean
@@ -83,7 +80,6 @@ public class BatchConfiguration {
                 .reader(cursorItemReader())
                 .processor(upperCaseProcessor())
                 .writer(clientAmqpItemWriter())
-                .listener(clientItemWriteListener)
                 .taskExecutor(taskExecutor)
                 .build();
     }
