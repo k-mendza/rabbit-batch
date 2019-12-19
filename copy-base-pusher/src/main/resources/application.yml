@@ -1,1 +1,22 @@
+# Server properties
+server:
+  port: 8081
 
+spring:
+  # Connection to original data
+  datasource:
+    url: 'jdbc:postgresql://localhost:5544/postgres'
+    username: postgres
+    password: password
+    initialization-mode: always
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: guest
+    password: guest
+
+# Multi thread properties
+pusher:
+  spring-batch-chunk-size: 2048
+  core-pool-size: 4
+  max-core-pool-size: 8
