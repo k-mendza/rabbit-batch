@@ -2,6 +2,7 @@ package copy.base.pusher.config;
 
 import copy.base.pusher.domain.Client;
 import copy.base.pusher.domain.ClientLowerCaseProcessor;
+import copy.base.pusher.domain.ClientPreparedStatementSetter;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -17,6 +18,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import javax.sql.DataSource;
@@ -32,22 +34,30 @@ public class BatchConfiguration {
 
     private DataSource dataSource;
     private RabbitTemplate rabbitTemplate;
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    private ClientPreparedStatementSetter clientPreparedStatementSetter;
 
     @Autowired
-    public BatchConfiguration(JobBuilderFactory jobBuilderFactory, StepBuilderFactory stepBuilderFactory, DataSource dataSource, RabbitTemplate rabbitTemplate) {
+    public BatchConfiguration(JobBuilderFactory jobBuilderFactory, StepBuilderFactory stepBuilderFactory, DataSource dataSource, RabbitTemplate rabbitTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate, ClientPreparedStatementSetter clientPreparedStatementSetter) {
         this.jobBuilderFactory = jobBuilderFactory;
         this.stepBuilderFactory = stepBuilderFactory;
         this.dataSource = dataSource;
         this.rabbitTemplate = rabbitTemplate;
+        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+        this.clientPreparedStatementSetter = clientPreparedStatementSetter;
     }
 
     @Bean
     public JdbcBatchItemWriter<Client> cursorItemWriter() {
         return new JdbcBatchItemWriterBuilder<Client>()
                 .dataSource(this.dataSource)
-                .sql("INSERT INTO CLIENT VALUES (?,?,?,?,?)")
+                .namedParametersJdbcTemplate(namedParameterJdbcTemplate)
+                .itemPreparedStatementSetter(clientPreparedStatementSetter)
+                .sql("INSERT INTO CLIENT (id, firstname, lastname, email, phone) VALUES (?,?,?,?,?)")
                 .build();
     }
+
+
 
     @Bean
     public AmqpItemReader<Client> clientAmqpItemReader() {

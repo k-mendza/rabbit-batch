@@ -1,14 +1,11 @@
 package copy.base.pusher.config;
 
-import copy.base.pusher.domain.ClientMessageListener;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
-import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -46,19 +43,5 @@ public class RabbitConfiguration {
         rabbitTemplate.setRoutingKey(MESSAGE_ROUTING_KEY);
         rabbitTemplate.setTaskExecutor(taskExecutor);
         return rabbitTemplate;
-    }
-
-    @Bean
-    SimpleMessageListenerContainer container(MessageListenerAdapter listenerAdapter) {
-        SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
-        container.setConnectionFactory(connectionFactory);
-        container.setQueueNames(MESSAGE_QUEUE);
-        container.setMessageListener(listenerAdapter);
-        return container;
-    }
-
-    @Bean
-    MessageListenerAdapter listenerAdapter(ClientMessageListener receiver) {
-        return new MessageListenerAdapter(receiver, "receiveMessage");
     }
 }
