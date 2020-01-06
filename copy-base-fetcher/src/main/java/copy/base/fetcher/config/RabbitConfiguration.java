@@ -24,7 +24,7 @@ public class RabbitConfiguration {
     }
 
     @Bean
-    Queue queue() {
+    public Queue queue() {
         return new Queue(MESSAGE_QUEUE, true);
     }
 

@@ -57,8 +57,6 @@ public class BatchConfiguration {
                 .build();
     }
 
-
-
     @Bean
     public AmqpItemReader<Client> clientAmqpItemReader() {
         return new AmqpItemReaderBuilder<Client>()
