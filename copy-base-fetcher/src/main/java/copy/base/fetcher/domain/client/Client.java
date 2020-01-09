@@ -1,4 +1,4 @@
-package copy.base.fetcher.domain;
+package copy.base.fetcher.domain.client;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.*;

@@ -1,8 +1,8 @@
 package copy.base.fetcher.config;
 
-import copy.base.fetcher.domain.Client;
-import copy.base.fetcher.domain.ClientRowMapper;
-import copy.base.fetcher.domain.ClientUpperCaseProcessor;
+import copy.base.fetcher.domain.client.Client;
+import copy.base.fetcher.domain.client.ClientRowMapper;
+import copy.base.fetcher.domain.client.ClientUpperCaseProcessor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
