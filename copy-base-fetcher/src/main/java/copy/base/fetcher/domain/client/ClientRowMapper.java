@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class ClientRowMapper implements RowMapper<Client> {
+
     @Override
     public Client mapRow(ResultSet resultSet, int i) throws SQLException {
         return new Client(resultSet.getLong("id"),
