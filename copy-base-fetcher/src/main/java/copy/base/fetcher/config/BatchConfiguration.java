@@ -3,6 +3,9 @@ package copy.base.fetcher.config;
 import copy.base.fetcher.domain.client.Client;
 import copy.base.fetcher.domain.client.ClientRowMapper;
 import copy.base.fetcher.domain.client.ClientUpperCaseProcessor;
+import copy.base.fetcher.domain.product.Product;
+import copy.base.fetcher.domain.product.ProductRowMapper;
+import copy.base.fetcher.domain.product.ProductUpperCaseProcessor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -43,12 +46,22 @@ public class BatchConfiguration {
     }
 
     @Bean
-    public JdbcCursorItemReader<Client> cursorItemReader() {
+    public JdbcCursorItemReader<Client> clientCursorItemReader() {
         return new JdbcCursorItemReaderBuilder<Client>()
                 .dataSource(this.dataSource)
                 .name("clientReader")
                 .sql("SELECT * FROM CLIENT")
                 .rowMapper(new ClientRowMapper())
+                .build();
+    }
+
+    @Bean
+    public JdbcCursorItemReader<Product> productCursorItemReader() {
+        return new JdbcCursorItemReaderBuilder<Product>()
+                .dataSource(this.dataSource)
+                .name("productReader")
+                .sql("SELECT * FROM PRODUCT")
+                .rowMapper(new ProductRowMapper())
                 .build();
     }
 
@@ -60,15 +73,28 @@ public class BatchConfiguration {
     }
 
     @Bean
-    public ClientUpperCaseProcessor upperCaseProcessor() {
+    public AmqpItemWriter<Product> productAmqpItemWriter() {
+        return new AmqpItemWriterBuilder<Product>()
+                .amqpTemplate(rabbitTemplate)
+                .build();
+    }
+
+    @Bean
+    public ClientUpperCaseProcessor clientUpperCaseProcessor() {
         return new ClientUpperCaseProcessor();
     }
 
     @Bean
-    public Job importClientJob(Step step1) {
+    public ProductUpperCaseProcessor productUpperCaseProcessor() {
+        return new ProductUpperCaseProcessor();
+    }
+
+    @Bean
+    public Job importClientJob(Step step1, Step step2) {
         return jobBuilderFactory.get("importClientJob")
                 .incrementer(new RunIdIncrementer())
                 .flow(step1)
+                .next(step2)
                 .end()
                 .build();
     }
@@ -77,9 +103,20 @@ public class BatchConfiguration {
     public Step step1(@Qualifier("taskExecutor") ThreadPoolTaskExecutor taskExecutor) {
         return stepBuilderFactory.get("step1")
                 .<Client, Client>chunk(chunkSize)
-                .reader(cursorItemReader())
-                .processor(upperCaseProcessor())
+                .reader(clientCursorItemReader())
+                .processor(clientUpperCaseProcessor())
                 .writer(clientAmqpItemWriter())
+                .taskExecutor(taskExecutor)
+                .build();
+    }
+
+    @Bean
+    public Step step2(@Qualifier("taskExecutor") ThreadPoolTaskExecutor taskExecutor) {
+        return stepBuilderFactory.get("step2")
+                .<Product, Product>chunk(chunkSize)
+                .reader(productCursorItemReader())
+                .processor(productUpperCaseProcessor())
+                .writer(productAmqpItemWriter())
                 .taskExecutor(taskExecutor)
                 .build();
     }
