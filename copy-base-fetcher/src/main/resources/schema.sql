@@ -6,6 +6,15 @@ CREATE TABLE IF NOT EXISTS client  (
 	phone VARCHAR NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS product  (
+    id BIGSERIAL NOT NULL primary key ,
+    name VARCHAR NOT NULL ,
+    description VARCHAR NOT NULL,
+    categoryId BIGINT NOT NULL,
+    price NUMERIC NOT NULL,
+    currency VARCHAR NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS BATCH_JOB_INSTANCE  (
                                      JOB_INSTANCE_ID BIGINT  NOT NULL PRIMARY KEY ,
                                      VERSION BIGINT ,
