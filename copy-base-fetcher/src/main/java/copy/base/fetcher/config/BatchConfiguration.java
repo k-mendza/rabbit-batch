@@ -35,14 +35,16 @@ public class BatchConfiguration {
     private int chunkSize;
 
     private DataSource dataSource;
-    private RabbitTemplate rabbitTemplate;
+    private RabbitTemplate clientRabbitTemplate;
+    private RabbitTemplate productRabbitTemplate;
 
     @Autowired
-    public BatchConfiguration(JobBuilderFactory jobBuilderFactory, StepBuilderFactory stepBuilderFactory, DataSource dataSource, RabbitTemplate rabbitTemplate) {
+    public BatchConfiguration(JobBuilderFactory jobBuilderFactory, StepBuilderFactory stepBuilderFactory, DataSource dataSource, @Qualifier("clientRabbitTemplate") RabbitTemplate clientRabbitTemplate, @Qualifier("productRabbitTemplate") RabbitTemplate productRabbitTemplate) {
         this.jobBuilderFactory = jobBuilderFactory;
         this.stepBuilderFactory = stepBuilderFactory;
         this.dataSource = dataSource;
-        this.rabbitTemplate = rabbitTemplate;
+        this.clientRabbitTemplate = clientRabbitTemplate;
+        this.productRabbitTemplate = productRabbitTemplate;
     }
 
     @Bean
@@ -68,14 +70,14 @@ public class BatchConfiguration {
     @Bean
     public AmqpItemWriter<Client> clientAmqpItemWriter() {
         return new AmqpItemWriterBuilder<Client>()
-                .amqpTemplate(rabbitTemplate)
+                .amqpTemplate(clientRabbitTemplate)
                 .build();
     }
 
     @Bean
     public AmqpItemWriter<Product> productAmqpItemWriter() {
         return new AmqpItemWriterBuilder<Product>()
-                .amqpTemplate(rabbitTemplate)
+                .amqpTemplate(productRabbitTemplate)
                 .build();
     }
 
