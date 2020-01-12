@@ -93,7 +93,7 @@ public class BatchConfiguration {
 
     @Bean
     public Job importClientJob(Step step1, Step step2) {
-        return jobBuilderFactory.get("importClientJob")
+        return jobBuilderFactory.get("importClientThenProductJob")
                 .incrementer(new RunIdIncrementer())
                 .flow(step1)
                 .next(step2)
