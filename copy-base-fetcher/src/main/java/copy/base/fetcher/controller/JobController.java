@@ -13,6 +13,6 @@ public class JobController {
 
     @RequestMapping("/{authKey}")
     public @ResponseBody int startJob(@PathVariable(value="authKey") String authKey){
-        return HttpStatus.OK.value();
+        return authKey.equals("abcd") ? HttpStatus.OK.value() : HttpStatus.UNAUTHORIZED.value();
     }
 }
