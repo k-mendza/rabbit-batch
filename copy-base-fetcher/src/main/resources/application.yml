@@ -14,6 +14,9 @@ spring:
     port: 5672
     username: guest
     password: guest
+  batch:
+    job:
+      enabled: false
 
 # Multi thread properties
 fetcher:
