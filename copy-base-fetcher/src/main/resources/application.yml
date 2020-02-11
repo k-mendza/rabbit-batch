@@ -23,3 +23,4 @@ fetcher:
   spring-batch-chunk-size: 2048
   core-pool-size: 4
   max-core-pool-size: 8
+  job.controller.auth.key: aaabbbcccddd
