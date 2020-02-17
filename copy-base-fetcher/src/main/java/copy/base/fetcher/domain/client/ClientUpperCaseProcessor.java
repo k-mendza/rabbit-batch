@@ -6,11 +6,10 @@ public class ClientUpperCaseProcessor implements ItemProcessor<Client, Client> {
 
     @Override
     public Client process(Client client) {
-        Long id = client.getId();
-        String firstName = client.getFirstName().toUpperCase();
-        String lastName = client.getLastName().toUpperCase();
-        String email = client.getEmail().toUpperCase();
-        String phone = client.getPhone();
-        return new Client(id, firstName, lastName, email, phone);
+        return new Client(client.getId(),
+                client.getFirstName().toUpperCase(),
+                client.getLastName().toUpperCase(),
+                client.getEmail().toUpperCase(),
+                client.getPhone());
     }
 }
