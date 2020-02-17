@@ -2,11 +2,11 @@ package copy.base.fetcher.domain.client;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 class ClientRowMapperTest {
@@ -17,19 +17,18 @@ class ClientRowMapperTest {
     @BeforeEach
     void setUp() throws SQLException {
         clientRowMapper = new ClientRowMapper();
-        resultSetMock = Mockito.mock(ResultSet.class);
-        when(resultSetMock.getLong(ClientRowMapper.CLIENT_ID)).thenReturn(mockedClient.getId());
-        when(resultSetMock.getString(ClientRowMapper.CLIENT_FIRST_NAME)).thenReturn(mockedClient.getFirstName());
-        when(resultSetMock.getString(ClientRowMapper.CLIENT_LAST_NAME)).thenReturn(mockedClient.getLastName());
-        when(resultSetMock.getString(ClientRowMapper.CLIENT_EMAIL)).thenReturn(mockedClient.getEmail());
-        when(resultSetMock.getString(ClientRowMapper.CLIENT_PHONE)).thenReturn(mockedClient.getPhone());
+        resultSetMock = mock(ResultSet.class);
+        when(resultSetMock.getLong(ClientRowMapper.ID_FIELD_NAME)).thenReturn(mockedClient.getId());
+        when(resultSetMock.getString(ClientRowMapper.FIRST_NAME_FIELD_NAME)).thenReturn(mockedClient.getFirstName());
+        when(resultSetMock.getString(ClientRowMapper.LAST_NAME_FIELD_NAME)).thenReturn(mockedClient.getLastName());
+        when(resultSetMock.getString(ClientRowMapper.EMAIL_FIELD_NAME)).thenReturn(mockedClient.getEmail());
+        when(resultSetMock.getString(ClientRowMapper.PHONE_FIELD_NAME)).thenReturn(mockedClient.getPhone());
         when(resultSetMock.next()).thenReturn(true).thenReturn(false);
     }
 
     @Test
     void mapRow() throws SQLException {
         Client mappedClient = clientRowMapper.mapRow(resultSetMock, 1);
-        assert mappedClient != null;
-        assert mappedClient.equals(mockedClient);
+        assert mappedClient != null && mappedClient.equals(mockedClient);
     }
 }
