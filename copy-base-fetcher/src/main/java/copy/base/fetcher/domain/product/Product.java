@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.*;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 @Setter
 @Getter
@@ -17,6 +18,6 @@ public class Product implements Serializable {
     private String name;
     private String description;
     private Long categoryId;
-    private Double price;
+    private BigDecimal price;
     private String currency;
 }
