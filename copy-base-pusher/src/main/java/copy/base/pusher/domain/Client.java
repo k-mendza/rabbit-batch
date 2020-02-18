@@ -11,6 +11,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonSerialize
+@EqualsAndHashCode
 public class Client implements Serializable {
     private Long id;
     private String firstName;
