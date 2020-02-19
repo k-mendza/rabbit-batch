@@ -16,12 +16,12 @@ class ClientUpperCaseProcessorTest {
 
     @Test
     void process() {
-        Client clientAfterProcessing = clientUpperCaseProcessor.process(mockedClient);
-        assert clientAfterProcessing != null;
-        assertEquals(mockedClient.getId(), clientAfterProcessing.getId());
-        assertEquals(mockedClient.getFirstName().toUpperCase(), clientAfterProcessing.getFirstName());
-        assertEquals(mockedClient.getLastName().toUpperCase(), clientAfterProcessing.getLastName());
-        assertEquals(mockedClient.getEmail().toUpperCase(), clientAfterProcessing.getEmail());
-        assertEquals(mockedClient.getPhone(), clientAfterProcessing.getPhone());
+        Client processedClient = clientUpperCaseProcessor.process(mockedClient);
+        assert processedClient != null;
+        assertEquals(mockedClient.getId(), processedClient.getId());
+        assertEquals(mockedClient.getFirstName().toUpperCase(), processedClient.getFirstName());
+        assertEquals(mockedClient.getLastName().toUpperCase(), processedClient.getLastName());
+        assertEquals(mockedClient.getEmail().toUpperCase(), processedClient.getEmail());
+        assertEquals(mockedClient.getPhone(), processedClient.getPhone());
     }
 }
