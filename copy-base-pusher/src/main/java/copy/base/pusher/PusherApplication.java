@@ -1,6 +1,6 @@
 package copy.base.pusher;
 
-import copy.base.pusher.domain.ClientPreparedStatementSetter;
+import copy.base.pusher.domain.client.ClientPreparedStatementSetter;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;

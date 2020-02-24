@@ -1,8 +1,8 @@
 package copy.base.pusher.config;
 
-import copy.base.pusher.domain.Client;
-import copy.base.pusher.domain.ClientLowerCaseProcessor;
-import copy.base.pusher.domain.ClientPreparedStatementSetter;
+import copy.base.pusher.domain.client.Client;
+import copy.base.pusher.domain.client.ClientLowerCaseProcessor;
+import copy.base.pusher.domain.client.ClientPreparedStatementSetter;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;

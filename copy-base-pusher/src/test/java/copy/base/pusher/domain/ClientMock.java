@@ -1,5 +1,7 @@
 package copy.base.pusher.domain;
 
+import copy.base.pusher.domain.client.Client;
+
 public class ClientMock {
     private static long MOCKED_CLIENT_ID = 1L;
     private static String MOCKED_CLIENT_FIRST_NAME = "John";

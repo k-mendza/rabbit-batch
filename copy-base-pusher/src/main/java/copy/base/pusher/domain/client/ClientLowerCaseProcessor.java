@@ -1,4 +1,4 @@
-package copy.base.pusher.domain;
+package copy.base.pusher.domain.client;
 
 import org.springframework.batch.item.ItemProcessor;
 

@@ -1,5 +1,7 @@
 package copy.base.pusher.domain;
 
+import copy.base.pusher.domain.client.Client;
+import copy.base.pusher.domain.client.ClientPreparedStatementSetter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
