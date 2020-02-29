@@ -1,11 +1,11 @@
 package copy.base.fetcher.controller;
 
 
+import copy.base.fetcher.config.JobControllerConfiguration;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.launch.JobLauncher;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,22 +15,19 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping("/api/v1/job")
 public class JobController {
-
-
     private final JobLauncher jobLauncher;
     private final Job job;
+    private final JobControllerConfiguration configuration;
 
-    @Value("${fetcher.job.controller.auth.key}")
-    private String expectedAuthKey;
-
-    public JobController(JobLauncher jobLauncher, Job job) {
+    public JobController(JobLauncher jobLauncher, Job job, JobControllerConfiguration configuration) {
         this.jobLauncher = jobLauncher;
         this.job = job;
+        this.configuration = configuration;
     }
 
     @RequestMapping("/{authKey}")
     public @ResponseBody int startJob(@PathVariable(value="authKey") String authKey) throws Exception {
-        if (authKey.equals(expectedAuthKey)) {
+        if (authKey.equals(configuration.getAuthKey())) {
             JobParameters jobParameters = new JobParametersBuilder().toJobParameters();
             jobLauncher.run(job, jobParameters);
             return HttpStatus.OK.value();
