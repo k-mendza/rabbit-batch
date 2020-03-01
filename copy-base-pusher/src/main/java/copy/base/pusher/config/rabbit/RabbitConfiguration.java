@@ -1,4 +1,4 @@
-package copy.base.pusher.config;
+package copy.base.pusher.config.rabbit;
 
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;

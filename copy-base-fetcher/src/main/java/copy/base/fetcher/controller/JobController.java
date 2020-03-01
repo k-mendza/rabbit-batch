@@ -7,12 +7,13 @@ import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 @RequestMapping("/api/v1/job")
 public class JobController {
     private final JobLauncher jobLauncher;
@@ -25,13 +26,13 @@ public class JobController {
         this.configuration = configuration;
     }
 
-    @RequestMapping("/{authKey}")
-    public @ResponseBody int startJob(@PathVariable(value="authKey") String authKey) throws Exception {
+    @PostMapping("/{authKey}")
+    public ResponseEntity<String> startJob(@PathVariable String authKey) throws Exception {
         if (authKey.equals(configuration.getAuthKey())) {
             JobParameters jobParameters = new JobParametersBuilder().toJobParameters();
             jobLauncher.run(job, jobParameters);
-            return HttpStatus.OK.value();
+            return ResponseEntity.ok("Starting job");
         }
-        return HttpStatus.UNAUTHORIZED.value();
+        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
 }
