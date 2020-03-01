@@ -28,11 +28,20 @@ public class JobController {
 
     @PostMapping("/{authKey}")
     public ResponseEntity<String> startJob(@PathVariable String authKey) throws Exception {
-        if (authKey.equals(configuration.getAuthKey())) {
-            JobParameters jobParameters = new JobParametersBuilder().toJobParameters();
-            jobLauncher.run(job, jobParameters);
-            return ResponseEntity.ok("Starting job");
-        }
-        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        return verifyAuthToken(authKey) ? handleBatchJob() : new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+    }
+
+    private ResponseEntity<String> handleBatchJob() throws Exception {
+        runJob();
+        return ResponseEntity.ok("Job started successfully");
+    }
+
+    private void runJob() throws Exception {
+        JobParameters jobParameters = new JobParametersBuilder().toJobParameters();
+        jobLauncher.run(job, jobParameters);
+    }
+
+    private boolean verifyAuthToken(String authKey) {
+        return authKey.equals(configuration.getAuthKey());
     }
 }
