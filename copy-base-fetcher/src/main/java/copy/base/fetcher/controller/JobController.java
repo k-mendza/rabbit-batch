@@ -28,7 +28,11 @@ public class JobController {
 
     @PostMapping("/{authKey}")
     public ResponseEntity<String> startJob(@PathVariable String authKey) throws Exception {
-        return verifyAuthToken(authKey) ? handleBatchJob() : new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        return verifyAuthToken(authKey) ? handleBatchJob() : getInvalidTokenResponse();
+    }
+
+    private ResponseEntity<String> getInvalidTokenResponse() {
+        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
 
     private ResponseEntity<String> handleBatchJob() throws Exception {
