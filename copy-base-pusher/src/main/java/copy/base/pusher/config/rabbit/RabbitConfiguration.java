@@ -43,6 +43,7 @@ public class RabbitConfiguration {
         RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
         rabbitTemplate.setExchange(MESSAGE_EXCHANGE);
         rabbitTemplate.setRoutingKey(MESSAGE_ROUTING_KEY);
+        rabbitTemplate.setDefaultReceiveQueue(MESSAGE_QUEUE);
         rabbitTemplate.setTaskExecutor(taskExecutor);
         return rabbitTemplate;
     }

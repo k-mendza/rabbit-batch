@@ -67,6 +67,7 @@ public class RabbitConfiguration {
     RabbitTemplate productRabbitTemplate(@Qualifier("taskExecutor") ThreadPoolTaskExecutor taskExecutor) {
         RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
         rabbitTemplate.setExchange(PRODUCT_MESSAGE_EXCHANGE);
+        rabbitTemplate.setEncoding("UTF-8");
         rabbitTemplate.setRoutingKey(PRODUCT_MESSAGE_ROUTING_KEY);
         rabbitTemplate.setTaskExecutor(taskExecutor);
         return rabbitTemplate;
