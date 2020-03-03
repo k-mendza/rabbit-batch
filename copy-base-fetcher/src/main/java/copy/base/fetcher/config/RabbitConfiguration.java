@@ -6,6 +6,8 @@ import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
+import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -50,10 +52,6 @@ public class RabbitConfiguration {
         return BindingBuilder.bind(queue).to(exchange).with(CLIENT_MESSAGE_ROUTING_KEY);
     }
 
-    Binding productBinding(@Qualifier("productQueue") Queue queue, @Qualifier("productExchange") TopicExchange exchange) {
-        return BindingBuilder.bind(queue).to(exchange).with(PRODUCT_MESSAGE_ROUTING_KEY);
-    }
-
     @Bean
     RabbitTemplate clientRabbitTemplate(@Qualifier("taskExecutor") ThreadPoolTaskExecutor taskExecutor) {
         RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
@@ -64,12 +62,19 @@ public class RabbitConfiguration {
     }
 
     @Bean
-    RabbitTemplate productRabbitTemplate(@Qualifier("taskExecutor") ThreadPoolTaskExecutor taskExecutor) {
+    RabbitTemplate productRabbitTemplate(@Qualifier("taskExecutor") ThreadPoolTaskExecutor taskExecutor,
+                                         MessageConverter messageConverter) {
         RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
         rabbitTemplate.setExchange(PRODUCT_MESSAGE_EXCHANGE);
         rabbitTemplate.setEncoding("UTF-8");
+        rabbitTemplate.setMessageConverter(messageConverter);
         rabbitTemplate.setRoutingKey(PRODUCT_MESSAGE_ROUTING_KEY);
         rabbitTemplate.setTaskExecutor(taskExecutor);
         return rabbitTemplate;
+    }
+
+    @Bean
+    public MessageConverter messageConverter() {
+        return new Jackson2JsonMessageConverter();
     }
 }
